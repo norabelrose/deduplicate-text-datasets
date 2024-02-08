@@ -9,8 +9,6 @@ opt-level = 3
 overflow-checks = false  # Go FAAASSTTT!
 
 [dependencies]
-zstd = "0.5"
-crossbeam = "0.3"
 filebuffer = "0.4"
 clap = { version = "3.1.1", features = ["derive"] }
-bitvec = "1"
+rayon = "1.8.1"

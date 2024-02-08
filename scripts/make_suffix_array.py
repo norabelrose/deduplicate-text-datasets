@@ -20,7 +20,7 @@ import numpy as np
 
 data_size = os.path.getsize(sys.argv[1])
 
-HACK = 100000
+HACK = 100000 * 2
 
 
 started = []
@@ -38,12 +38,15 @@ else:
     total_jobs = 1
     jobs_at_once = 1
 
+total_jobs, jobs_at_once = 200, 10
 S = data_size//total_jobs
 
 
 for jobstart in range(0, total_jobs, jobs_at_once):
     wait = []
     for i in range(jobstart,jobstart+jobs_at_once):
+        print("--- Starting job", i, "of", total_jobs, "----")
+
         s, e = i*S, min((i+1)*S+HACK, data_size)
         cmd = "./target/debug/dedup_dataset make-part --data-file %s --start-byte %d --end-byte %d"%(sys.argv[1], s, e)
         started.append((s, e))
@@ -68,8 +71,8 @@ while True:
             print("GOGO")
             go = True
         else:
-            size_data = os.path.getsize(x)
-            FACT = np.ceil(np.log(size_data)/np.log(2)/8)
+            size_data = os.path.getsize(x) // 2
+            FACT = np.ceil(np.log2(size_data) / 8)
             print("FACT", FACT,size_data*FACT, os.path.getsize(x+".table.bin"))
             if not os.path.exists(x) or not os.path.exists(x+".table.bin") or os.path.getsize(x+".table.bin") == 0 or size_data*FACT != os.path.getsize(x+".table.bin"):
                 go = True
